@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <openssl/md5.h>
+#include <openssl/sha.h>
 
 extern int yylex();
 extern int yyparse();
@@ -78,11 +80,32 @@ void to_octal(int n) {
     printf("%s\n", buffer);
 }
 
+void to_decimal(int n) {
+    printf("%d\n", n);
+}
 
 void to_hex(int n) {
     char buffer[33];
     itoa(n, buffer, 16);
     printf("%s\n", buffer);
+}
+
+void sha256_string(const char *string) {
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256((unsigned char*)string, strlen(string), hash);
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+        printf("%02x", hash[i]);
+    }
+    printf("\n");
+}
+
+void md5_string(const char *string) {
+    unsigned char hash[MD5_DIGEST_LENGTH];
+    MD5((unsigned char*)string, strlen(string), hash);
+    for (int i = 0; i < MD5_DIGEST_LENGTH; i++) {
+        printf("%02x", hash[i]);
+    }
+    printf("\n");
 }
 
 %}
@@ -94,8 +117,11 @@ void to_hex(int n) {
 
 %token <num> NUMBER
 %token <id> IDENTIFIER
-%token SIGMA PI ABS ROOT PRIMEFACTORS TO_BIN TO_OCT TO_HEX
+%token SIGMA PI ABS ROOT PRIMEFACTORS TO_BIN TO_OCT TO_DEC TO_HEX
 %token SIN COS TAN COT SEC CSC
+%token SINH COSH TANH COTH SECH CSCH
+%token SHA256HASH MD5HASH LOG
+%token GT LT EQ NE MOD
 %token EOL
 %token LPAREN RPAREN EQUAL LBRACE RBRACE COMMA
 %token PLUS MINUS MULTIPLY DIVIDE POWER
@@ -103,9 +129,10 @@ void to_hex(int n) {
 %type <num> expression condition
 
 %left PLUS MINUS
-%left MULTIPLY DIVIDE
+%left MULTIPLY DIVIDE MOD
 %left POWER
 %right FACTORIAL
+%left GT LT EQ NE
 %left LPAREN RPAREN
 
 %%
@@ -119,7 +146,10 @@ line:
     | PRIMEFACTORS LPAREN expression RPAREN EOL { printf("Prime Factors: "); prime_factors((int)$3); }
     | TO_BIN LPAREN expression RPAREN EOL { printf("Binary: "); to_binary((int)$3); }
     | TO_OCT LPAREN expression RPAREN EOL { printf("Octal: "); to_octal((int)$3); }
+    | TO_DEC LPAREN expression RPAREN EOL { printf("Decimal: "); to_decimal((int)$3); }
     | TO_HEX LPAREN expression RPAREN EOL { printf("Hexadecimal: "); to_hex((int)$3); }
+    | SHA256HASH LPAREN IDENTIFIER RPAREN EOL { printf("SHA256: "); sha256_string($3); }
+    | MD5HASH LPAREN IDENTIFIER RPAREN EOL { printf("MD5: "); md5_string($3); }
     ;
 
 expression:
@@ -131,19 +161,31 @@ expression:
         }
         $$ = result;
     }
+    | expression GT expression { $$ = $1 > $3; }
+    | expression LT expression { $$ = $1 < $3; }
+    | expression EQ expression { $$ = $1 == $3; }
+    | expression NE expression { $$ = $1 != $3; }
     | expression PLUS expression { $$ = $1 + $3; }
     | expression MINUS expression { $$ = $1 - $3; }
     | expression MULTIPLY expression { $$ = $1 * $3; }
     | expression DIVIDE expression { $$ = $1 / $3; }
+    | expression MOD expression { $$ = fmod($1, $3); }
     | expression POWER expression { $$ = pow($1, $3); }
     | ROOT LPAREN expression RPAREN { $$ = sqrt($3); }
     | ABS LPAREN expression RPAREN { $$ = fabs($3); }
+    | LOG LPAREN expression COMMA expression RPAREN { $$ = log($3) / log($5); }
     | SIN LPAREN expression RPAREN { $$ = sin($3); }
     | COS LPAREN expression RPAREN { $$ = cos($3); }
     | TAN LPAREN expression RPAREN { $$ = tan($3); }
     | COT LPAREN expression RPAREN { $$ = 1/tan($3); }
     | SEC LPAREN expression RPAREN { $$ = 1/cos($3); }
     | CSC LPAREN expression RPAREN { $$ = 1/sin($3); }
+    | SINH LPAREN expression RPAREN { $$ = sinh($3); }
+    | COSH LPAREN expression RPAREN { $$ = cosh($3); }
+    | TANH LPAREN expression RPAREN { $$ = tanh($3); }
+    | COTH LPAREN expression RPAREN { $$ = 1/tanh($3); }
+    | SECH LPAREN expression RPAREN { $$ = 1/cosh($3); }
+    | CSCH LPAREN expression RPAREN { $$ = 1/sinh($3); }
     | expression FACTORIAL { $$ = factorial($1); }
     | MINUS expression %prec POWER { $$ = -$2; }
     | LPAREN expression RPAREN { $$ = $2; }

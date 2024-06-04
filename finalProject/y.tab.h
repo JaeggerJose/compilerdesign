@@ -71,19 +71,33 @@ extern int yydebug;
     COT = 272,                     /* COT  */
     SEC = 273,                     /* SEC  */
     CSC = 274,                     /* CSC  */
-    EOL = 275,                     /* EOL  */
-    LPAREN = 276,                  /* LPAREN  */
-    RPAREN = 277,                  /* RPAREN  */
-    EQUAL = 278,                   /* EQUAL  */
-    LBRACE = 279,                  /* LBRACE  */
-    RBRACE = 280,                  /* RBRACE  */
-    COMMA = 281,                   /* COMMA  */
-    PLUS = 282,                    /* PLUS  */
-    MINUS = 283,                   /* MINUS  */
-    MULTIPLY = 284,                /* MULTIPLY  */
-    DIVIDE = 285,                  /* DIVIDE  */
-    POWER = 286,                   /* POWER  */
-    FACTORIAL = 287                /* FACTORIAL  */
+    SINH = 275,                    /* SINH  */
+    COSH = 276,                    /* COSH  */
+    TANH = 277,                    /* TANH  */
+    COTH = 278,                    /* COTH  */
+    SECH = 279,                    /* SECH  */
+    CSCH = 280,                    /* CSCH  */
+    SHA256HASH = 281,              /* SHA256HASH  */
+    MD5HASH = 282,                 /* MD5HASH  */
+    LOG = 283,                     /* LOG  */
+    GT = 284,                      /* GT  */
+    LT = 285,                      /* LT  */
+    EQ = 286,                      /* EQ  */
+    NE = 287,                      /* NE  */
+    MOD = 288,                     /* MOD  */
+    EOL = 289,                     /* EOL  */
+    LPAREN = 290,                  /* LPAREN  */
+    RPAREN = 291,                  /* RPAREN  */
+    EQUAL = 292,                   /* EQUAL  */
+    LBRACE = 293,                  /* LBRACE  */
+    RBRACE = 294,                  /* RBRACE  */
+    COMMA = 295,                   /* COMMA  */
+    PLUS = 296,                    /* PLUS  */
+    MINUS = 297,                   /* MINUS  */
+    MULTIPLY = 298,                /* MULTIPLY  */
+    DIVIDE = 299,                  /* DIVIDE  */
+    POWER = 300,                   /* POWER  */
+    FACTORIAL = 301                /* FACTORIAL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -109,30 +123,44 @@ extern int yydebug;
 #define COT 272
 #define SEC 273
 #define CSC 274
-#define EOL 275
-#define LPAREN 276
-#define RPAREN 277
-#define EQUAL 278
-#define LBRACE 279
-#define RBRACE 280
-#define COMMA 281
-#define PLUS 282
-#define MINUS 283
-#define MULTIPLY 284
-#define DIVIDE 285
-#define POWER 286
-#define FACTORIAL 287
+#define SINH 275
+#define COSH 276
+#define TANH 277
+#define COTH 278
+#define SECH 279
+#define CSCH 280
+#define SHA256HASH 281
+#define MD5HASH 282
+#define LOG 283
+#define GT 284
+#define LT 285
+#define EQ 286
+#define NE 287
+#define MOD 288
+#define EOL 289
+#define LPAREN 290
+#define RPAREN 291
+#define EQUAL 292
+#define LBRACE 293
+#define RBRACE 294
+#define COMMA 295
+#define PLUS 296
+#define MINUS 297
+#define MULTIPLY 298
+#define DIVIDE 299
+#define POWER 300
+#define FACTORIAL 301
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 93 "calc.y"
+#line 113 "calc.y"
 
     double num;
     char *id;
 
-#line 136 "y.tab.h"
+#line 164 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

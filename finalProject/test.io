@@ -24,3 +24,17 @@ PRIMEFACTORS(24)
 TO_HEX(10)
 TO_OCT(8)
 TO_BIN(256)
+3 > 2
+3 < 1
+3 == 3
+3 != 3
+15 % 4
+csch(1)
+sech(1)
+md5(hello)
+sha256(hello)
+sinh(1)
+cosh(1)
+tanh(1/2)
+log(100, 10)
+log(100, 2)
